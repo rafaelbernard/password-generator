@@ -16,6 +16,7 @@ class RequirementPasswordGenerator extends ComputerPasswordGenerator
 {
     private $minimumCounts = array();
     private $maximumCounts = array();
+    private $maximumRepeatedCharacters = array();
     private $validOptions = array();
     private $dirtyCheck = true;
 
@@ -143,6 +144,29 @@ class RequirementPasswordGenerator extends ComputerPasswordGenerator
         }
 
         $this->maximumCounts[$option] = $characterCount;
+
+        return $this;
+    }
+
+    public function setMaximumRepeatedCharacters($option, $characterCount)
+    {
+        $this->dirtyCheck = true;
+
+        if (!$this->validOption($option)) {
+            throw new InvalidOptionException('Invalid Option');
+        }
+
+        if (is_null($characterCount)) {
+            unset($this->maximumRepeatedCharacters[$option]);
+
+            return $this;
+        }
+
+        if (!is_int($characterCount) || $characterCount < 0) {
+            throw new \InvalidArgumentException('Expected non-negative integer');
+        }
+
+        $this->maximumRepeatedCharacters[$option] = $characterCount;
 
         return $this;
     }
